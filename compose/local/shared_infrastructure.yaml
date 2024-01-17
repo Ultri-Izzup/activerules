@@ -1,0 +1,58 @@
+services:
+  postgres:
+    hostname: "postgres"
+    command: ["postgres", "-c", "log_statement=all"]
+    image: "postgres:15"
+    healthcheck:
+      test: ["CMD", "pg_isready", "-q", "-d", "postgres", "-U", "postgres"]
+      timeout: 45s
+      interval: 10s
+      retries: 10
+    ports:
+      - "5432:5432"
+    restart: no
+    env_file: .env_shared
+    networks:
+      - activerules-net
+    volumes:
+      - activerules-pg:/var/lib/postgres/data
+      - ./postgres:/docker-entrypoint-initdb.d/
+
+  smtp4dev:
+    container_name: activerules-smtp4dev
+    image: rnwood/smtp4dev:v3
+    restart: no
+    env_file: .env_shared
+    networks:
+      - activerules-net
+    ports:
+      - '5000:80'
+      - '25:25'
+      - '143:143'
+    volumes:
+      # This is where smtp4dev stores the database..
+      - activerules-smtp4dev:/smtp4dev
+
+  proxy:
+    image: nginx
+    volumes:
+      - type: bind
+        source: ./proxy/conf/local
+        target: /etc/nginx/conf.d
+        read_only: true
+      - type: bind
+        source: ./proxy/certs/local
+        target: /etc/nginx/certs
+        read_only: true
+    ports:
+      - 80:80
+      - 443:443
+
+volumes:
+  activerules-smtp4dev: {}
+  activerules-pg: {}
+
+networks:
+  activerules-net:
+    external: false
+    driver: bridge

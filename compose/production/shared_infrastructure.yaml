@@ -1,0 +1,19 @@
+services:
+  proxy:
+    image: nginx
+    volumes:
+      - ./proxy/conf/production/:/etc/nginx/conf.d/:ro
+      - ./certbot/www/:/var/www/certbot/:ro
+    ports:
+      - 80:80
+      - 443:443
+  certbot:
+    image: certbot/certbot:latest
+    volumes:
+      - ./certbot/www/:/var/www/certbot/:rw
+      - ./certbot/conf/:/etc/letsencrypt/:rw
+    
+networks:
+  activerules-net:
+    external: false
+    driver: bridge
