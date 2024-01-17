@@ -10,7 +10,8 @@
     "dev:down": "docker compose -f dev-infra-compose.yaml down",
     "prod:certs": "sh ./scripts/production/create-certs.sh",
     "prod:up": "docker compose -f prod-infra-compose.yaml up",
-    "prod:stop": "docker compose -f prod-infra-compose.yaml stop"
+    "prod:stop": "docker compose -f prod-infra-compose.yaml stop",
+    "prod:required": "sh ./scripts/production/install-required.sh"
   },
   "keywords": [],
   "author": "Brian Winkers",
