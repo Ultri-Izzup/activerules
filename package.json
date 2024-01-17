@@ -1,0 +1,12 @@
+{
+  "name": "activerules",
+  "version": "1.0.0",
+  "description": "```sh # Add to /etc/hosts for Ultri local dev 127.0.0.1 example.com api.example.com www.example.com 127.0.0.1 com.example.com api.com.example.com www.com.example.com 127.0.0.1 space.example.com api.space.example.com www.space.example.com 127.0.0.1 shop.example.com api.shop.example.com www.shop.example.com ```",
+  "main": "index.js",
+  "scripts": {
+    "dev:certs": "sh ./scripts/create-local-certs.sh"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
