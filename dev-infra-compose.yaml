@@ -37,11 +37,11 @@ services:
     image: nginx
     volumes:
       - type: bind
-        source: ./proxy/conf
+        source: ./proxy/conf/dev
         target: /etc/nginx/conf.d
         read_only: true
       - type: bind
-        source: ./proxy/certs
+        source: ./proxy/certs/dev
         target: /etc/nginx/certs
         read_only: true
     ports:
