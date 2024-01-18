@@ -1,8 +1,0 @@
-services:
-  proxy:
-    image: nginx
-    volumes:
-      - ./proxy/conf/:/etc/nginx/conf.d/:ro
-      - ./certbot/www:/var/www/certbot/:ro
-    ports:
-      - 80:80
