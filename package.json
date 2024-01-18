@@ -8,7 +8,8 @@
     "dev:up": "docker compose -f dev-infra-compose.yaml up",
     "dev:stop": "docker compose -f dev-infra-compose.yaml stop",
     "dev:down": "docker compose -f dev-infra-compose.yaml down",
-    "prod:nginx:update": "sudo cp ./infrastructure/production/nginx/conf/* /etc/nginx/sites-available",
+    "prod:nginx:update": "sudo cp ./infrastructure/production/nginx/conf/* /etc/nginx/sites-available && sudo systemctl reload nginx",
+    "prod:nginx:resync": "sudo cp /etc/nginx/sites-available/* /home/admin/activerules/infrastructure/production/nginx/conf",
     "prod:required": "sh ./scripts/production/install-required.sh"
   },
   "keywords": [],
