@@ -117,7 +117,7 @@ services:
       - "3010:3000"
     env_file: 
       - ".env_local"
-      - ".env_local_shop"
+      - ".env_local_space"
     networks:
       - activerules-net
     volumes:
