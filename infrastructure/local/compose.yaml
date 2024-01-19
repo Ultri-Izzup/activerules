@@ -11,7 +11,7 @@ services:
     ports:
       - "5432:5432"
     restart: no
-    env_file: .env_shared
+    # env_file: .env_shared
     networks:
       - activerules-net
     volumes:
@@ -22,7 +22,7 @@ services:
     container_name: activerules-smtp4dev
     image: rnwood/smtp4dev:v3
     restart: no
-    env_file: .env_shared
+    # env_file: .env_shared
     networks:
       - activerules-net
     ports:
@@ -37,11 +37,11 @@ services:
     image: nginx
     volumes:
       - type: bind
-        source: ./proxy/conf/local
+        source: ./nginx/conf/
         target: /etc/nginx/conf.d
         read_only: true
       - type: bind
-        source: ./proxy/certs/local
+        source: ./nginx/certs
         target: /etc/nginx/certs
         read_only: true
     ports:

@@ -1,0 +1,153 @@
+services:
+
+  # SHARED SERVICES
+  # There is only one Postgres, Nginx and SMTP4dev server.
+  # All Fastify and Suprtokens API use these shared resources.
+
+  postgres:
+    hostname: "postgres"
+    command: ["postgres", "-c", "log_statement=all"]
+    image: "postgres:15"
+    healthcheck:
+      test: ["CMD", "pg_isready", "-q", "-d", "postgres", "-U", "postgres"]
+      timeout: 45s
+      interval: 10s
+      retries: 10
+    ports:
+      - "5432:5432"
+    restart: no
+    env_file: .env_local
+    networks:
+      - activerules-net
+    volumes:
+      - activerules-pg:/var/lib/postgres/data
+      - ./postgres:/docker-entrypoint-initdb.d/
+
+  smtp4dev:
+    container_name: activerules-smtp4dev
+    image: rnwood/smtp4dev:v3
+    restart: no
+    env_file: .env_local
+    networks:
+      - activerules-net
+    ports:
+      - '5000:80'
+      - '25:25'
+      - '143:143'
+    volumes:
+      # This is where smtp4dev stores the database..
+      - activerules-smtp4dev:/smtp4dev
+
+  proxy:
+    image: nginx
+    volumes:
+      - type: bind
+        source: ./nginx/local/conf/
+        target: /etc/nginx/conf.d
+        read_only: true
+      - type: bind
+        source: ./nginx/local/certs
+        target: /etc/nginx/certs
+        read_only: true
+    networks:
+      - activerules-net
+    ports:
+      - 80:80
+      - 443:443
+
+  # SHOP SUPERTOKENS
+  api-ultri-shop:
+    image: activerules/api
+    restart: no
+    build: ./api
+    command: ["npm", "run", "dev"]
+    # command: ["npm", "run", "start:debug"]
+    # command: ["npm", "run", "dev:debug"]
+    ports:
+      - "3000:3000"
+    env_file: 
+      - ".env_local"
+      - ".env_local_shop"
+    networks:
+      - activerules-net
+    volumes:
+      - "./api/services:/usr/src/app/services"
+      - "./api/js:/usr/src/app/js"
+      - "./api/plugins:/usr/src/app/plugins"
+      - "./api/routes:/usr/src/app/routes"
+      - "./api/app.js:/usr/src/app/app.js"
+      - "./api/server.js:/usr/src/app/server.js"
+      - "../gotosocial:/usr/src/app/gotosocial"
+
+  supertokens-ultri-shop:
+    image: registry.supertokens.io/supertokens/supertokens-postgresql:7.0
+    depends_on:
+      postgres:
+        condition: service_healthy
+    ports:
+      - 3567:3567
+    env_file: 
+      - ".env_local"
+      - ".env_local_shop"
+    networks:
+      - activerules-net
+    restart: no
+    healthcheck:
+      test: >
+        bash -c 'exec 3<>/dev/tcp/0.0.0.0/3567 && echo -e "GET /hello HTTP/1.1\r\nhost: 0.0.0.0:3567\r\nConnection: close\r\n\r\n" >&3 && cat <&3 | grep "Hello"'
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # SPACE SUPERTOKENS
+  api-ultri-space:
+    image: activerules/api
+    restart: no
+    build: ./api
+    command: ["npm", "run", "dev"]
+    # command: ["npm", "run", "start:debug"]
+    # command: ["npm", "run", "dev:debug"]
+    ports:
+      - "3010:3000"
+    env_file: 
+      - ".env_local"
+      - ".env_local_space"
+    networks:
+      - activerules-net
+    volumes:
+      - "./api/services:/usr/src/app/services"
+      - "./api/js:/usr/src/app/js"
+      - "./api/plugins:/usr/src/app/plugins"
+      - "./api/routes:/usr/src/app/routes"
+      - "./api/app.js:/usr/src/app/app.js"
+      - "./api/server.js:/usr/src/app/server.js"
+      - "../gotosocial:/usr/src/app/gotosocial"
+
+  supertokens-ultri-space:
+    image: registry.supertokens.io/supertokens/supertokens-postgresql:7.0
+    depends_on:
+      postgres:
+        condition: service_healthy
+    ports:
+      - 3577:3567
+    env_file: 
+      - ".env_local"
+      - ".env_local_space"
+    networks:
+      - activerules-net
+    restart: no
+    healthcheck:
+      test: >
+        bash -c 'exec 3<>/dev/tcp/0.0.0.0/3577 && echo -e "GET /hello HTTP/1.1\r\nhost: 0.0.0.0:3577\r\nConnection: close\r\n\r\n" >&3 && cat <&3 | grep "Hello"'
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  activerules-smtp4dev: {}
+  activerules-pg: {}
+
+networks:
+  activerules-net:
+    external: false
+    driver: bridge
