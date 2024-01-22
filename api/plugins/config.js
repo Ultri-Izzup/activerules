@@ -6,6 +6,7 @@ async function configPlugin(server, options, done) {
     type: "object",
     required: [
       "HTTP_PORT",
+      "REALM",
       "SUPERTOKENS_CONNECTION_URI",
       "SUPERTOKENS_API_KEY",
       "SUPERTOKENS_APPNAME",
@@ -102,6 +103,9 @@ async function configPlugin(server, options, done) {
         type: "string",
       },
       DB_NAME: {
+        type: "string",
+      },
+      REALM: {
         type: "string",
       }
     },

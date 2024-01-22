@@ -61,21 +61,18 @@ async function auth(server, options) {
 
                 const client = await server.pg.connect();
 
+                console.log(result);
+
                 let accounts = [];
 
                 try {
                   const { rows } = await client.query(
                     `
-                    SELECT 
-                      username,
-                      domain,
-                      created_at AS "createdAt",
-                      status
-                    FROM public.sync_member(
-                      $1, $2, $3, '127.0.0.1'
+                    SELECT * from entity.member_signin(
+                      $1, $2, $3, $4
                     )
                     `,
-                    [result.user.id, result.user.email, result.user.timeJoined]
+                    [result.user.id, result.user.email, result.user.timeJoined, server.config.REALM]
                   );
                   console.log(rows);
                   accounts = rows;
