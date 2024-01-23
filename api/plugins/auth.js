@@ -68,8 +68,11 @@ async function auth(server, options) {
                 try {
                   const { rows } = await client.query(
                     `
-                    SELECT * from entity.member_signin(
-                      $1, $2, $3, $4
+                    SELECT * FROM entity.member_signin_accounts(
+                      $1,
+                      $2,
+                      $3,
+                      $4
                     )
                     `,
                     [result.user.id, result.user.email, result.user.timeJoined, server.config.REALM]
