@@ -41,7 +41,34 @@ COMMENT ON EXTENSION pgcrypto IS 'cryptographic functions';
 -- Name: member_by_email(character varying); Type: FUNCTION; Schema: entity; Owner: -
 --
 
-CREATE FUNCTION entity.member_by_email(email_in character varying) RETURNS integer
+CREATE FUNCTION entity.member_by_email(email_in character varying) RETURNS TABLE(member_id integer, display_name character varying)
+    LANGUAGE plpgsql
+    AS $$
+
+	DECLARE member_id INTEGER;
+	DECLARE member_display_name CHARACTER VARYING;
+	
+	BEGIN
+	
+	SELECT entity.member.id, entity.member.display_name FROM entity.member WHERE email_hash = digest(LOWER(email_in), 'sha256')
+	INTO member_id, member_display_name;
+	
+	IF member_id IS NULL THEN
+		INSERT INTO entity.member(email, email_hash) VALUES(LOWER(email_in), digest(LOWER(email_in), 'sha256'))
+		RETURNING entity.member.id, entity.member.display_name INTO member_id, member_display_name;
+	END IF;
+	
+	RETURN QUERY SELECT member_id, member_display_name;
+	
+	END;	
+$$;
+
+
+--
+-- Name: member_id_by_email(character varying); Type: FUNCTION; Schema: entity; Owner: -
+--
+
+CREATE FUNCTION entity.member_id_by_email(email_in character varying) RETURNS integer
     LANGUAGE plpgsql
     AS $$
 
@@ -88,6 +115,47 @@ CREATE FUNCTION entity.member_signin(uid_in uuid, email_in character varying, cr
 	
 	RETURN found_member_id;
 	
+	END;	
+$$;
+
+
+--
+-- Name: member_signin_accounts(uuid, character varying, bigint, character varying); Type: FUNCTION; Schema: entity; Owner: -
+--
+
+CREATE FUNCTION entity.member_signin_accounts(uid_in uuid, email_in character varying, created_at_in bigint, realm_in character varying) RETURNS TABLE(member_id integer, display_name character varying, created_at timestamp with time zone, email character varying, account_name character varying, related text, related_at timestamp with time zone, domain character varying)
+    LANGUAGE plpgsql
+    AS $$
+
+	DECLARE found_member_id INTEGER;
+	DECLARE found_display_name CHARACTER VARYING;
+	DECLARE found_realm_id SMALLINT;
+	
+	BEGIN
+	
+	SELECT member_by_email.member_id, member_by_email.display_name FROM entity.member_by_email(
+		email_in
+	) INTO found_member_id, found_display_name;
+	
+	SELECT id FROM entity.realm WHERE entity.realm.domain = realm_in INTO found_realm_id;
+	
+	INSERT INTO entity.credential(uid, realm_id, member_id, created_at, last_login_at)
+	VALUES(uid_in, found_realm_id, found_member_id, TO_TIMESTAMP(created_at_in/1000), CURRENT_TIMESTAMP)
+	ON CONFLICT ON CONSTRAINT credential_pkey DO UPDATE SET last_login_at = CURRENT_TIMESTAMP;
+	
+	RETURN QUERY SELECT found_member_id, found_display_name, m.created_at, m.email, m.display_name, c.uid::text, c.created_at, r.domain
+	FROM entity.member m
+     JOIN entity.credential c ON c.member_id = m.id
+     JOIN entity.realm r ON r.id = c.realm_id
+	 WHERE m.id = found_member_id
+	UNION
+	 SELECT found_member_id, found_display_name, m.created_at, m.email, m.display_name, f.id::text, f.created_at, r.domain
+   	FROM entity.member m
+	 JOIN entity.fediverse f ON f.member_id = m.id
+	 JOIN entity.realm r ON r.id = f.realm_id
+    WHERE m.id = found_member_id
+	;
+
 	END;	
 $$;
 
