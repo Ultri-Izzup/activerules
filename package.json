@@ -5,9 +5,9 @@
   "main": "index.js",
   "scripts": {
     "dev:certs": "sh ./scripts/local/create-certs.sh",
-    "dev:up": "docker compose -f dev-infra-compose.yaml up",
-    "dev:stop": "docker compose -f dev-infra-compose.yaml stop",
-    "dev:down": "docker compose -f dev-infra-compose.yaml down",
+    "dev:up": "docker compose -f compose-local.yaml up",
+    "dev:stop": "docker compose -f compose-local.yaml stop",
+    "dev:down": "docker compose -f compose-local.yaml down",
     "dev:dump": "sh ./scripts/local/dump.sh",
     "prod:nginx:update": "sudo cp ./infrastructure/production/nginx/conf/* /etc/nginx/sites-available && sudo systemctl reload nginx",
     "prod:nginx:resync": "sudo cp /etc/nginx/sites-available/* /home/admin/activerules/infrastructure/production/nginx/conf",
