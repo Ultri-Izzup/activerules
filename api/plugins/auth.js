@@ -67,19 +67,19 @@ async function auth(server, options) {
                 let accounts = [];
 
                 try {
-                  // const { rows } = await client.query(
-                  //   `
-                  //   SELECT * FROM entity.member_signin_accounts(
-                  //     $1,
-                  //     $2,
-                  //     $3,
-                  //     $4
-                  //   )
-                  //   `,
-                  //   [result.user.id, result.user.email, result.user.timeJoined, server.config.REALM]
-                  // );
-                  // console.log(rows);
-                  // accounts = rows;
+                  const { rows } = await client.query(
+                    `
+                    SELECT * FROM entity.member_signin_accounts(
+                      $1,
+                      $2,
+                      $3,
+                      $4
+                    )
+                    `,
+                    [result.user.id, result.user.email, result.user.timeJoined, server.config.REALM]
+                  );
+                  console.log(rows);
+                  accounts = rows;
                 } catch (e) {
                   console.log(e);
                 } finally {
