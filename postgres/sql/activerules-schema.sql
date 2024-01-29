@@ -279,7 +279,8 @@ CREATE TABLE entity.member (
     email_hash bytea NOT NULL,
     created_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
     email character varying NOT NULL,
-    display_name character varying
+    display_name character varying,
+    uid uuid DEFAULT gen_random_uuid() NOT NULL
 );
 
 
@@ -528,6 +529,14 @@ ALTER TABLE ONLY entity.credential
 
 ALTER TABLE ONLY entity.member
     ADD CONSTRAINT uq_member_email_hash UNIQUE (email_hash);
+
+
+--
+-- Name: member uq_member_uid; Type: CONSTRAINT; Schema: entity; Owner: -
+--
+
+ALTER TABLE ONLY entity.member
+    ADD CONSTRAINT uq_member_uid UNIQUE (uid);
 
 
 --

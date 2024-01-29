@@ -62,14 +62,12 @@ async function auth(server, options) {
 
                 const client = await server.pg.connect();
 
-                console.log(result);
-
-                let accounts = [];
-
                 try {
                   const { rows } = await client.query(
                     `
-                    SELECT * FROM entity.member_signin_accounts(
+                    SELECT 
+                      *
+                      FROM entity.member_signin(
                       $1,
                       $2,
                       $3,
@@ -78,8 +76,6 @@ async function auth(server, options) {
                     `,
                     [result.user.id, result.user.email, result.user.timeJoined, server.config.REALM]
                   );
-                  console.log(rows);
-                  accounts = rows;
                 } catch (e) {
                   console.log(e);
                 } finally {
@@ -87,7 +83,7 @@ async function auth(server, options) {
                   client.release();
                 }
 
-                result.accounts = accounts;
+                // result.accounts = accounts;
 
                 return result;
               },
@@ -98,7 +94,7 @@ async function auth(server, options) {
           // functions: (originalImplementation) => {
           //   return {
           //     ...originalImplementation,
-          //     consumeCode: async function (input) {
+          //     consumeCode: async (input) => {
           //       const originalResult = await originalImplementation.consumeCode(
           //         input
           //       );
@@ -106,38 +102,7 @@ async function auth(server, options) {
           //       console.log(
           //         "ORIGINAL ###################################################################",
           //         originalResult
-          //       );
-
-          //       const client = await server.pg.connect();
-
-          //       let accounts = [];
-
-          //       try {
-          //         const { rows } = await client.query(
-          //           `
-          //           SELECT
-          //             username,
-          //             account_domain AS "accountDomain",
-          //             host_domain AS "hostDomain",
-          //             created_at AS "createdAt",
-          //             status
-          //           FROM public.sync_member(
-          //             $1, $2, $3, '127.0.0.1'
-          //           )
-          //           `,
-          //           [originalResult.user.id, originalResult.user.email, originalResult.user.timeJoined]
-          //         );
-          //         console.log(rows)
-          //         accounts = rows;
-          //       } catch (e) {
-          //         console.log(e);
-          //       } finally {
-          //         // Release the client immediately after query resolves, or upon error
-          //         client.release();
-          //       }
-
-          //       originalResult.accounts = accounts;
-
+ 
           //       return originalResult;
           //     },
           //   };
