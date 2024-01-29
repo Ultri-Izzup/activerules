@@ -41,8 +41,9 @@ services:
   proxy:
     image: nginx
     depends_on:
-      - api-ultri-shop
-      - api-ultri-space
+      # - api-ultri-shop
+      # - api-ultri-space
+      - api-ultri-com
     volumes:
       - type: bind
         source: ./nginx/local/conf/
@@ -58,22 +59,110 @@ services:
       - 80:80
       - 443:443
 
-  # SHOP SUPERTOKENS
-  api-ultri-shop:
+  # # SHOP SUPERTOKENS
+  # api-ultri-shop:
+  #   image: activerules/api
+  #   restart: no
+  #   build: ./api
+  #   depends_on:
+  #     postgres:
+  #       condition: service_healthy
+  #   command: ["npm", "run", "dev"]
+  #   # command: ["npm", "run", "start:debug"]
+  #   # command: ["npm", "run", "dev:debug"]
+  #   ports:
+  #     - "3000:3000"
+  #   env_file: 
+  #     - ".env_local"
+  #     - ".env_local_shop"
+  #   networks:
+  #     - activerules-net
+  #   volumes:
+  #     - "./api/services:/usr/src/app/services"
+  #     - "./api/js:/usr/src/app/js"
+  #     - "./api/plugins:/usr/src/app/plugins"
+  #     - "./api/routes:/usr/src/app/routes"
+  #     - "./api/app.js:/usr/src/app/app.js"
+  #     - "./api/server.js:/usr/src/app/server.js"
+  #     - "../gotosocial:/usr/src/app/gotosocial"
+
+  # supertokens-ultri-shop:
+  #   image: registry.supertokens.io/supertokens/supertokens-postgresql:7.0
+  #   depends_on:
+  #     postgres:
+  #       condition: service_healthy
+  #   ports:
+  #     - 3567:3567
+  #   env_file: 
+  #     - ".env_local"
+  #     - ".env_local_shop"
+  #   networks:
+  #     - activerules-net
+  #   restart: no
+  #   healthcheck:
+  #     test: >
+  #       bash -c 'exec 3<>/dev/tcp/0.0.0.0/3567 && echo -e "GET /hello HTTP/1.1\r\nhost: 0.0.0.0:3567\r\nConnection: close\r\n\r\n" >&3 && cat <&3 | grep "Hello"'
+  #     interval: 10s
+  #     timeout: 5s
+  #     retries: 5
+
+  # # SPACE SUPERTOKENS
+  # api-ultri-space:
+  #   image: activerules/api
+  #   restart: no
+  #   build: ./api
+  #   command: ["npm", "run", "dev"]
+  #   # command: ["npm", "run", "start:debug"]
+  #   # command: ["npm", "run", "dev:debug"]
+  #   ports:
+  #     - "3010:3000"
+  #   env_file: 
+  #     - ".env_local"
+  #     - ".env_local_space"
+  #   networks:
+  #     - activerules-net
+  #   volumes:
+  #     - "./api/services:/usr/src/app/services"
+  #     - "./api/js:/usr/src/app/js"
+  #     - "./api/plugins:/usr/src/app/plugins"
+  #     - "./api/routes:/usr/src/app/routes"
+  #     - "./api/app.js:/usr/src/app/app.js"
+  #     - "./api/server.js:/usr/src/app/server.js"
+  #     - "../gotosocial:/usr/src/app/gotosocial"
+
+  # supertokens-ultri-space:
+  #   image: registry.supertokens.io/supertokens/supertokens-postgresql:7.0
+  #   depends_on:
+  #     postgres:
+  #       condition: service_healthy
+  #   ports:
+  #     - 3577:3567
+  #   env_file: 
+  #     - ".env_local"
+  #     - ".env_local_space"
+  #   networks:
+  #     - activerules-net
+  #   restart: no
+  #   healthcheck:
+  #     test: >
+  #       bash -c 'exec 3<>/dev/tcp/0.0.0.0/3577 && echo -e "GET /hello HTTP/1.1\r\nhost: 0.0.0.0:3577\r\nConnection: close\r\n\r\n" >&3 && cat <&3 | grep "Hello"'
+  #     interval: 10s
+  #     timeout: 5s
+  #     retries: 5
+
+# COM SUPERTOKENS
+  api-ultri-com:
     image: activerules/api
     restart: no
     build: ./api
-    depends_on:
-      postgres:
-        condition: service_healthy
     command: ["npm", "run", "dev"]
     # command: ["npm", "run", "start:debug"]
     # command: ["npm", "run", "dev:debug"]
     ports:
-      - "3000:3000"
+      - "3020:3000"
     env_file: 
       - ".env_local"
-      - ".env_local_shop"
+      - ".env_local_com"
     networks:
       - activerules-net
     volumes:
@@ -85,69 +174,26 @@ services:
       - "./api/server.js:/usr/src/app/server.js"
       - "../gotosocial:/usr/src/app/gotosocial"
 
-  supertokens-ultri-shop:
+  supertokens-ultri-com:
     image: registry.supertokens.io/supertokens/supertokens-postgresql:7.0
     depends_on:
       postgres:
         condition: service_healthy
     ports:
-      - 3567:3567
+      - 3587:3567
     env_file: 
       - ".env_local"
-      - ".env_local_shop"
+      - ".env_local_com"
     networks:
       - activerules-net
     restart: no
     healthcheck:
       test: >
-        bash -c 'exec 3<>/dev/tcp/0.0.0.0/3567 && echo -e "GET /hello HTTP/1.1\r\nhost: 0.0.0.0:3567\r\nConnection: close\r\n\r\n" >&3 && cat <&3 | grep "Hello"'
+        bash -c 'exec 3<>/dev/tcp/0.0.0.0/3587 && echo -e "GET /hello HTTP/1.1\r\nhost: 0.0.0.0:3587\r\nConnection: close\r\n\r\n" >&3 && cat <&3 | grep "Hello"'
       interval: 10s
       timeout: 5s
       retries: 5
 
-  # SPACE SUPERTOKENS
-  api-ultri-space:
-    image: activerules/api
-    restart: no
-    build: ./api
-    command: ["npm", "run", "dev"]
-    # command: ["npm", "run", "start:debug"]
-    # command: ["npm", "run", "dev:debug"]
-    ports:
-      - "3010:3000"
-    env_file: 
-      - ".env_local"
-      - ".env_local_space"
-    networks:
-      - activerules-net
-    volumes:
-      - "./api/services:/usr/src/app/services"
-      - "./api/js:/usr/src/app/js"
-      - "./api/plugins:/usr/src/app/plugins"
-      - "./api/routes:/usr/src/app/routes"
-      - "./api/app.js:/usr/src/app/app.js"
-      - "./api/server.js:/usr/src/app/server.js"
-      - "../gotosocial:/usr/src/app/gotosocial"
-
-  supertokens-ultri-space:
-    image: registry.supertokens.io/supertokens/supertokens-postgresql:7.0
-    depends_on:
-      postgres:
-        condition: service_healthy
-    ports:
-      - 3577:3567
-    env_file: 
-      - ".env_local"
-      - ".env_local_space"
-    networks:
-      - activerules-net
-    restart: no
-    healthcheck:
-      test: >
-        bash -c 'exec 3<>/dev/tcp/0.0.0.0/3577 && echo -e "GET /hello HTTP/1.1\r\nhost: 0.0.0.0:3577\r\nConnection: close\r\n\r\n" >&3 && cat <&3 | grep "Hello"'
-      interval: 10s
-      timeout: 5s
-      retries: 5
 
 volumes:
   activerules-smtp4dev: {}

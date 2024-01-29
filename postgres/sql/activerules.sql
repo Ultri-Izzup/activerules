@@ -445,6 +445,8 @@ COPY entity.credential (uid, realm_id, member_id, created_at, last_login_at) FRO
 f2edc80f-6bad-47cb-9b71-53cd2eaa701a	3	1	2024-01-23 01:05:00+00	2024-01-23 01:05:01.22549+00
 e5ed14d2-f8b4-4c36-8bdf-a9466346844a	2	7	2024-01-23 20:28:49+00	2024-01-23 20:28:49.648089+00
 6f1a7aab-d723-4f12-af69-f3c5951c1320	2	6	2024-01-23 18:23:10+00	2024-01-23 20:33:13.554247+00
+e60ab2c0-c95c-448c-a32b-aa5cbffb828b	2	8	2024-01-23 21:37:54+00	2024-01-23 21:37:55.017583+00
+40e7652d-52d1-4ae8-a432-878e078d71c5	2	9	2024-01-23 21:44:21+00	2024-01-23 21:44:21.596218+00
 \.
 
 
@@ -482,6 +484,8 @@ COPY entity.member (id, email_hash, created_at, email, display_name) FROM stdin;
 3	\\x09cc13279dc9f74a57ecfcd265324217c59ead60c6f44cfb39c4b9014f7e1779	2024-01-22 23:20:45.604827+00	tiara.keebler24@example.net	\N
 6	\\xd01586c723c401a677b80168c618c2ca92de2c1e5d51c62eeedea9ff934d7afa	2024-01-23 18:30:29.577948+00	gaston.gusikowski3@example.com	\N
 7	\\x476680841dc7589e60cef851f637d0bf107c6371547cba3f0d75f3382563cfc3	2024-01-23 20:28:49.648089+00	nicklaus58@example.com	\N
+8	\\xf36e295386909c4b05b4797da2e6f50e68437c7128c2a36a14366913b3961974	2024-01-23 21:37:55.017583+00	roma_rowe11@example.net	\N
+9	\\xebdbe4d0451d5b30c19c1eb4373de5946fb5c04511f7f45f441824126284b061	2024-01-23 21:44:21.596218+00	bwinkers@gmail.com	\N
 \.
 
 
@@ -539,7 +543,7 @@ SELECT pg_catalog.setval('entity.group_id_seq', 1, false);
 -- Name: member_id_seq; Type: SEQUENCE SET; Schema: entity; Owner: -
 --
 
-SELECT pg_catalog.setval('entity.member_id_seq', 7, true);
+SELECT pg_catalog.setval('entity.member_id_seq', 9, true);
 
 
 --
