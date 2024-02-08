@@ -310,12 +310,10 @@
     ajv-formats "^2.1.1"
     fast-uri "^2.0.0"
 
-"@fastify/autoload@^5.7.1":
-  version "5.7.1"
-  resolved "https://registry.npmjs.org/@fastify/autoload/-/autoload-5.7.1.tgz"
-  integrity sha512-F5c94MYAF0tacVu6X4/1ojO7fzmgrJXsqitDtpqknXgiHZpeFNhYSnNCUHPz6UDRKsfkDohmh0fiPTtOd8clzQ==
-  dependencies:
-    pkg-up "^3.1.0"
+"@fastify/autoload@^5.8.0":
+  version "5.8.0"
+  resolved "https://registry.npmjs.org/@fastify/autoload/-/autoload-5.8.0.tgz"
+  integrity sha512-bF86vl+1Kk91S41WIL9NrKhcugGQg/cQ959aTaombkCjA+9YAbgVCKKu2lRqtMsosDZ0CNRfVnaLYoHQIDUI2A==
 
 "@fastify/cors@^8.3.0":
   version "8.3.0"
@@ -338,7 +336,7 @@
     env-schema "^5.0.0"
     fastify-plugin "^4.0.0"
 
-"@fastify/error@^3.0.0", "@fastify/error@^3.2.0":
+"@fastify/error@^3.2.0":
   version "3.3.0"
   resolved "https://registry.npmjs.org/@fastify/error/-/error-3.3.0.tgz"
   integrity sha512-dj7vjIn1Ar8sVXj2yAXiMNCJDmS9MQ9XMlIecX2dIzzhjSHCyKo4DdXjXMs7wKW2kj6yvVRSpuQjOZ3YLrh56w==
@@ -713,14 +711,6 @@
   dependencies:
     "@babel/types" "^7.20.7"
 
-"@types/glob@^7.1.3":
-  version "7.2.0"
-  resolved "https://registry.npmjs.org/@types/glob/-/glob-7.2.0.tgz"
-  integrity sha512-ZUxbzKl0IfJILTS6t7ip5fQQM/J3TJYubDm3nMbgubNNYS62eXeUpoLUC8/7fJNiFYHTrGPQn7hspDUzIHX3UA==
-  dependencies:
-    "@types/minimatch" "*"
-    "@types/node" "*"
-
 "@types/graceful-fs@^4.1.3":
   version "4.1.6"
   resolved "https://registry.npmjs.org/@types/graceful-fs/-/graceful-fs-4.1.6.tgz"
@@ -746,11 +736,6 @@
   integrity sha512-c3mAZEuK0lvBp8tmuL74XRKn1+y2dcwOUpH7x4WrF6gk1GIgiluDRgMYQtw2OFcBvAJWlt6ASU3tSqxp0Uu0Aw==
   dependencies:
     "@types/istanbul-lib-report" "*"
-
-"@types/minimatch@*":
-  version "5.1.2"
-  resolved "https://registry.npmjs.org/@types/minimatch/-/minimatch-5.1.2.tgz"
-  integrity sha512-K0VQKziLUWkVKiRVrx4a40iPaxTUefQmjtkQofBkYRcoaaL/8rhwDWww9qWbrgicNOgnpIsMxyNIUM4+n6dUIA==
 
 "@types/node@*":
   version "20.4.1"
@@ -1441,21 +1426,12 @@ fastest-levenshtein@1.0.16:
   resolved "https://registry.npmjs.org/fastest-levenshtein/-/fastest-levenshtein-1.0.16.tgz"
   integrity sha512-eRnCtTTtGZFpQCwhJiUOuxPQWRXVKYDn0b2PeHfXL6/Zi53SLAzAHfVhVWK2AryC/WH05kGfxhFIPvTF0SXQzg==
 
-fastify-autoroutes@^3.0.2:
-  version "3.0.2"
-  resolved "https://registry.npmjs.org/fastify-autoroutes/-/fastify-autoroutes-3.0.2.tgz"
-  integrity sha512-ADNE0l7BIQ2uYqFjLDREeXX+DFwmrlWTaM3kkj0L02Tgyyara+Qe8BywX3Fq/xLBRmGCx3kDtuWQbQUyPUx3yw==
-  dependencies:
-    "@fastify/error" "^3.0.0"
-    fastify-plugin "^4.0.0"
-    glob-promise "^4.2.2"
-
 fastify-plugin@^4.0.0, fastify-plugin@^4.5.0:
   version "4.5.0"
   resolved "https://registry.npmjs.org/fastify-plugin/-/fastify-plugin-4.5.0.tgz"
   integrity sha512-79ak0JxddO0utAXAQ5ccKhvs6vX2MGyHHMMsmZkBANrq3hXc1CHzvNPHOcvTsVMEPl5I+NT+RO4YKMGehOfSIg==
 
-fastify@^4.0.0, fastify@^4.16.0:
+fastify@^4.16.0:
   version "4.19.2"
   resolved "https://registry.npmjs.org/fastify/-/fastify-4.19.2.tgz"
   integrity sha512-2unheeIRWFf9/Jjcz7djOpKuXCTzZjlyFfiBwKqpldkHMN2rfTLu/f9pYTdwlhzC9Cdj0S2H12zlug0Kd5uZ1w==
@@ -1514,13 +1490,6 @@ find-my-way@^7.6.0:
     fast-deep-equal "^3.1.3"
     fast-querystring "^1.0.0"
     safe-regex2 "^2.0.0"
-
-find-up@^3.0.0:
-  version "3.0.0"
-  resolved "https://registry.npmjs.org/find-up/-/find-up-3.0.0.tgz"
-  integrity sha512-1yD6RmLI1XBfxugvORwlck6f75tYL+iR0jqwsOrOxMZyGYqUuDhJ0l4AXdO1iX/FTs9cBAMEk1gWSEx1kSbylg==
-  dependencies:
-    locate-path "^3.0.0"
 
 find-up@^4.0.0:
   version "4.1.0"
@@ -1595,13 +1564,6 @@ get-stream@^6.0.0:
   resolved "https://registry.npmjs.org/get-stream/-/get-stream-6.0.1.tgz"
   integrity sha512-ts6Wi+2j3jQjqi70w5AlN8DFnkSwC+MqmxEzdEALB2qXZYV3X/b1CTfgPLGJNMeAWxdPfU8FO1ms3NUfaHCPYg==
 
-glob-promise@^4.2.2:
-  version "4.2.2"
-  resolved "https://registry.npmjs.org/glob-promise/-/glob-promise-4.2.2.tgz"
-  integrity sha512-xcUzJ8NWN5bktoTIX7eOclO1Npxd/dyVqUJxlLIDasT4C7KZyqlPIwkdJ0Ypiy3p2ZKahTjK4M9uC3sNSfNMzw==
-  dependencies:
-    "@types/glob" "^7.1.3"
-
 glob@^7.1.3:
   version "7.2.3"
   resolved "https://registry.npmjs.org/glob/-/glob-7.2.3.tgz"
@@ -1615,18 +1577,6 @@ glob@^7.1.3:
     path-is-absolute "^1.0.0"
 
 glob@^7.1.4:
-  version "7.2.3"
-  resolved "https://registry.npmjs.org/glob/-/glob-7.2.3.tgz"
-  integrity sha512-nFR0zLpU2YCaRxwoCJvL6UvCH2JFyFVIvwTLsIf21AuHlMskA1hhTdk+LlYJtOlYt9v6dvszD2BGRqBL+iQK9Q==
-  dependencies:
-    fs.realpath "^1.0.0"
-    inflight "^1.0.4"
-    inherits "2"
-    minimatch "^3.1.1"
-    once "^1.3.0"
-    path-is-absolute "^1.0.0"
-
-glob@^7.1.6:
   version "7.2.3"
   resolved "https://registry.npmjs.org/glob/-/glob-7.2.3.tgz"
   integrity sha512-nFR0zLpU2YCaRxwoCJvL6UvCH2JFyFVIvwTLsIf21AuHlMskA1hhTdk+LlYJtOlYt9v6dvszD2BGRqBL+iQK9Q==
@@ -2341,14 +2291,6 @@ lines-and-columns@^1.1.6:
   resolved "https://registry.npmjs.org/lines-and-columns/-/lines-and-columns-1.2.4.tgz"
   integrity sha512-7ylylesZQ/PV29jhEDl3Ufjo6ZX7gCqJr5F7PKrqc93v7fzSymt1BpwEU8nAUXs8qzzvqhbjhK5QZg6Mt/HkBg==
 
-locate-path@^3.0.0:
-  version "3.0.0"
-  resolved "https://registry.npmjs.org/locate-path/-/locate-path-3.0.0.tgz"
-  integrity sha512-7AO748wWnIhNqAuaty2ZWHkQHRSNfPVIsPIfwEOWO22AmaoVrWavlOcMR5nzTLNYvp36X220/maaRsrec1G65A==
-  dependencies:
-    p-locate "^3.0.0"
-    path-exists "^3.0.0"
-
 locate-path@^5.0.0:
   version "5.0.0"
   resolved "https://registry.npmjs.org/locate-path/-/locate-path-5.0.0.tgz"
@@ -2561,13 +2503,6 @@ openapi-types@^12.0.0, openapi-types@^12.0.2:
   resolved "https://registry.npmjs.org/openapi-types/-/openapi-types-12.1.3.tgz"
   integrity sha512-N4YtSYJqghVu4iek2ZUvcN/0aqH1kRDuNqzcycDxhOUpg7GdvLa2F3DgS6yBNhInhv2r/6I0Flkn7CqL8+nIcw==
 
-p-limit@^2.0.0:
-  version "2.3.0"
-  resolved "https://registry.npmjs.org/p-limit/-/p-limit-2.3.0.tgz"
-  integrity sha512-//88mFWSJx8lxCzwdAABTJL2MyWB12+eIY7MDL2SqLmAkeKU9qxRvWuSyTjm3FUmpBEMuFfckAIqEaVGUDxb6w==
-  dependencies:
-    p-try "^2.0.0"
-
 p-limit@^2.2.0:
   version "2.3.0"
   resolved "https://registry.npmjs.org/p-limit/-/p-limit-2.3.0.tgz"
@@ -2581,13 +2516,6 @@ p-limit@^3.1.0:
   integrity sha512-TYOanM3wGwNGsZN2cVTYPArw454xnXj5qmWF1bEoAc4+cU/ol7GVh7odevjp1FNHduHc3KZMcFduxU5Xc6uJRQ==
   dependencies:
     yocto-queue "^0.1.0"
-
-p-locate@^3.0.0:
-  version "3.0.0"
-  resolved "https://registry.npmjs.org/p-locate/-/p-locate-3.0.0.tgz"
-  integrity sha512-x+12w/To+4GFfgJhBEpiDcLozRJGegY+Ei7/z0tSLkMmxGZNybVMSfWj9aJn8Z5Fc7dBUNJOOVgPv2H7IwulSQ==
-  dependencies:
-    p-limit "^2.0.0"
 
 p-locate@^4.1.0:
   version "4.1.0"
@@ -2615,11 +2543,6 @@ parse-json@^5.2.0:
     error-ex "^1.3.1"
     json-parse-even-better-errors "^2.3.0"
     lines-and-columns "^1.1.6"
-
-path-exists@^3.0.0:
-  version "3.0.0"
-  resolved "https://registry.npmjs.org/path-exists/-/path-exists-3.0.0.tgz"
-  integrity sha512-bpC7GYwiDYQ4wYLe+FA8lhRjhQCMcQGuSgGGqDkg/QerRWw9CmGRT0iSOVRSZJ29NMLZgIzqaljJ63oaL4NIJQ==
 
 path-exists@^4.0.0:
   version "4.0.0"
@@ -2750,13 +2673,6 @@ pkg-dir@^4.2.0:
   integrity sha512-HRDzbaKjC+AOWVXxAU/x54COGeIv9eb+6CkDSQoNTt4XyWoIJvuPsXizxu/Fr23EiekbtZwmh1IcIG/l/a10GQ==
   dependencies:
     find-up "^4.0.0"
-
-pkg-up@^3.1.0:
-  version "3.1.0"
-  resolved "https://registry.npmjs.org/pkg-up/-/pkg-up-3.1.0.tgz"
-  integrity sha512-nDywThFk1i4BQK4twPQ6TA4RT8bDY96yeuCVBWL3ePARCiEKDRSrNGbFIgUJpLp+XeIR65v8ra7WuJOFUBtkMA==
-  dependencies:
-    find-up "^3.0.0"
 
 postgres-array@~2.0.0:
   version "2.0.0"

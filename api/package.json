@@ -24,7 +24,7 @@
   },
   "homepage": "https://github.com/Ultri-Izzup/izzup-api#readme",
   "dependencies": {
-    "@fastify/autoload": "^5.7.1",
+    "@fastify/autoload": "^5.8.0",
     "@fastify/cors": "^8.3.0",
     "@fastify/env": "^4.2.0",
     "@fastify/formbody": "^7.4.0",
@@ -35,7 +35,6 @@
     "@zxcvbn-ts/language-common": "^3.0.4",
     "@zxcvbn-ts/language-en": "^3.0.2",
     "fastify": "^4.16.0",
-    "fastify-autoroutes": "^3.0.2",
     "fastify-plugin": "^4.5.0",
     "jest": "^29.6.2",
     "jsonwebtoken": "^9.0.1",

@@ -1,0 +1,465 @@
+{
+	"info": {
+		"_postman_id": "bc73a720-7a05-415b-a12a-f1ed50af5b2a",
+		"name": "ActiveRules",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "27760",
+		"_collection_link": "https://ultrinet.postman.co/workspace/Ultri-Izzup~ae1d2b1f-30a6-494e-9639-8bc256f90647/collection/27760-bc73a720-7a05-415b-a12a-f1ed50af5b2a?action=share&source=collection_link&creator=27760"
+	},
+	"item": [
+		{
+			"name": "health",
+			"item": [
+				{
+					"name": "API Health Check",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"The root of the API server is available\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.status).to.eql(\"up\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{apiUrl}}/health",
+							"host": [
+								"{{apiUrl}}"
+							],
+							"path": [
+								"health"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "API Reflect",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"The root of the API server is available\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.status).to.eql(\"up\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{apiUrl}}/health/reflect",
+							"host": [
+								"{{apiUrl}}"
+							],
+							"path": [
+								"health",
+								"reflect"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "API Postgres Health Check",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"The root of the API server is available\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.status).to.eql(\"OK\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{apiUrl}}/health/postgres",
+							"host": [
+								"{{apiUrl}}"
+							],
+							"path": [
+								"health",
+								"postgres"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "auth",
+			"item": [
+				{
+					"name": "API Auth - Request OTP",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"HTTP Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"var jsonData = pm.response.json();",
+									"",
+									"pm.test(\"Returned status is OK\", function () {",
+									"    jsonData.status == \"OK\"",
+									"});",
+									"",
+									"// Set variables for deviceId and preAuthSessionId so we can use them when submitting the code",
+									"",
+									"pm.environment.set(\"deviceId_1\", jsonData.deviceId);",
+									"pm.environment.set(\"preAuthSessionId_1\", jsonData.preAuthSessionId);"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.environment.set(\"randoEmail\", pm.variables.replaceIn('{{$randomExampleEmail}}'));"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "rid",
+								"value": "passwordless",
+								"type": "text"
+							},
+							{
+								"key": "st-auth-mode",
+								"value": "cookie",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"{{randoEmail}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{apiUrl}}/auth/signinup/code",
+							"host": [
+								"{{apiUrl}}"
+							],
+							"path": [
+								"auth",
+								"signinup",
+								"code"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "API Auth - Submit OTP",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"HTTP Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"var jsonData = pm.response.json();",
+									"",
+									"pm.test(\"Returned status is OK\", function () {",
+									"    jsonData.status == \"OK\"",
+									"});",
+									"",
+									"pm.environment.set(\"deviceId_1\", jsonData.deviceId);",
+									"pm.environment.set(\"preAuthSessionId_1\", jsonData.preAuthSessionId);"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.environment.set(\"randoEmail\", pm.variables.replaceIn('{{$randomExampleEmail}}'));"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "rid",
+								"value": "passwordless",
+								"type": "text"
+							},
+							{
+								"key": "st-auth-mode",
+								"value": "cookie",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"deviceId\": \"{{deviceId_1}}\",\n    \"preAuthSessionId\": \"{{preAuthSessionId_1}}\",\n    \"userInputCode\": \"157510\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{apiUrl}}/auth/signinup/code/consume",
+							"host": [
+								"{{apiUrl}}"
+							],
+							"path": [
+								"auth",
+								"signinup",
+								"code",
+								"consume"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "API Auth - Refresh session",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"HTTP Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"var jsonData = pm.response.json();",
+									"",
+									"pm.test(\"Returned status is OK\", function () {",
+									"    jsonData.status == \"OK\"",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.environment.set(\"randoEmail\", pm.variables.replaceIn('{{$randomExampleEmail}}'));"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "rid",
+								"value": "session",
+								"type": "text"
+							},
+							{
+								"key": "st-auth-mode",
+								"value": "cookie",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{apiUri}}/auth/session/refresh",
+							"host": [
+								"{{apiUri}}"
+							],
+							"path": [
+								"auth",
+								"session",
+								"refresh"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "member",
+			"item": [
+				{
+					"name": "Member Accounts",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"HTTP Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"var jsonData = pm.response.json();",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "rid",
+								"value": "passwordless",
+								"type": "text"
+							},
+							{
+								"key": "st-auth-mode",
+								"value": "cookie",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{apiUrl}}/member/account",
+							"host": [
+								"{{apiUrl}}"
+							],
+							"path": [
+								"member",
+								"account"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Fediverse Username Available",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"HTTP Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"var jsonData = pm.response.json();",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "rid",
+								"value": "passwordless",
+								"type": "text"
+							},
+							{
+								"key": "st-auth-mode",
+								"value": "cookie",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{apiUrl}}/member/account",
+							"host": [
+								"{{apiUrl}}"
+							],
+							"path": [
+								"member",
+								"account"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
