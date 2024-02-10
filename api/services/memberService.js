@@ -7,32 +7,21 @@ import blockedUsernames from "../js/blockedUsernames.js";
 
 const MemberService = (postgres) => {
 
-  /**
-   * Check if username available
-   * 
-   * @param {*} username 
-   * @param {*} domain 
-   * @returns 
-   */
-  const getAccounts = async (credentialUid) => {
+  const getMemberByCredentialUid = async (credentialUid) => {
 
     const client = await postgres.connect();
 
     try {
       const { rows } = await client.query(
         `SELECT 
-        member_uid AS "memberUid",
         display_name AS "displayName",
-        created_at AS "createdAt",
-        email,
-        account_name AS "accountName",
-        related AS "accountId",
-        related_at AS "accountCreatedAt",
-        domain
-        FROM entity.member_accounts($1)`,
+        realm
+        FROM entity.member_by_credential_uid($1)`,
         [credentialUid]
       );
-      return rows;
+    
+      return rows[0];
+
     } catch(e) {
       console.log(e) 
     } finally {
@@ -43,7 +32,7 @@ const MemberService = (postgres) => {
   };
 
   return { 
-    getAccounts
+    getMemberByCredentialUid
   };
 };
 

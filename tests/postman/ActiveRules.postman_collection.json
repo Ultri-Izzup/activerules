@@ -309,9 +309,9 @@
 							}
 						},
 						"url": {
-							"raw": "{{apiUri}}/auth/session/refresh",
+							"raw": "{{apiUrl}}/auth/session/refresh",
 							"host": [
-								"{{apiUri}}"
+								"{{apiUrl}}"
 							],
 							"path": [
 								"auth",
@@ -325,10 +325,10 @@
 			]
 		},
 		{
-			"name": "member",
+			"name": "credentials",
 			"item": [
 				{
-					"name": "Member Accounts",
+					"name": "Member Credentials",
 					"event": [
 						{
 							"listen": "test",
@@ -381,13 +381,82 @@
 							}
 						},
 						"url": {
-							"raw": "{{apiUrl}}/member/account",
+							"raw": "{{apiUrl}}/credential",
 							"host": [
 								"{{apiUrl}}"
 							],
 							"path": [
-								"member",
-								"account"
+								"credential"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "fediverse",
+			"item": [
+				{
+					"name": "Member Fediverse accounts",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"HTTP Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"var jsonData = pm.response.json();",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "rid",
+								"value": "passwordless",
+								"type": "text"
+							},
+							{
+								"key": "st-auth-mode",
+								"value": "cookie",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{apiUrl}}/fediverse",
+							"host": [
+								"{{apiUrl}}"
+							],
+							"path": [
+								"fediverse"
 							]
 						}
 					},
@@ -420,11 +489,8 @@
 							}
 						}
 					],
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
 					"request": {
-						"method": "GET",
+						"method": "POST",
 						"header": [
 							{
 								"key": "rid",
@@ -439,7 +505,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "",
+							"raw": "{\n    \"username\": \"test\",\n    \"domains\": [\"usevue.org\",\"democratic.space\"]\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -447,13 +513,142 @@
 							}
 						},
 						"url": {
-							"raw": "{{apiUrl}}/member/account",
+							"raw": "{{apiUrl}}/fediverse/username/available",
+							"host": [
+								"{{apiUrl}}"
+							],
+							"path": [
+								"fediverse",
+								"username",
+								"available"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Claim Fediverse username",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"HTTP Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"var jsonData = pm.response.json();",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "rid",
+								"value": "passwordless",
+								"type": "text"
+							},
+							{
+								"key": "st-auth-mode",
+								"value": "cookie",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"test\",\n    \"domains\": [\"usevue.org\",\"democratic.space\"]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{apiUrl}}/fediverse/username/claim",
+							"host": [
+								"{{apiUrl}}"
+							],
+							"path": [
+								"fediverse",
+								"username",
+								"claim"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Set Fediverse username password",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"HTTP Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"var jsonData = pm.response.json();",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "rid",
+								"value": "passwordless",
+								"type": "text"
+							},
+							{
+								"key": "st-auth-mode",
+								"value": "cookie",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"test\",\n    \"domain\": \"usevue.org\",\n    \"password\": \"reRTer#$%gerg56erergergerge\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{apiUrl}}/member/username/password",
 							"host": [
 								"{{apiUrl}}"
 							],
 							"path": [
 								"member",
-								"account"
+								"username",
+								"password"
 							]
 						}
 					},

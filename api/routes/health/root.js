@@ -1,5 +1,5 @@
 export default async (fastify, options) => {
-    fastify.get('/', 
+    fastify.get('', 
     {
         schema: {
           description:

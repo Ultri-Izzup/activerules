@@ -1,13 +1,13 @@
 import { verifySession } from "supertokens-node/recipe/session/framework/fastify/index.js";
 
 export default async (fastify, options) => {
-    fastify.get("/",
+    fastify.get("",
     {
       preHandler: verifySession(),
       schema: {
-        description: "Get account info",
-        tags: ["member"],
-        summary: "Get provisioned accounts for a member",
+        description: "Get GoToSocial Fediverse account info",
+        tags: ["fediverse"],
+        summary: "Get GoToSocial Fediverse accounts for a member",
         response: {
           200: {
             description: "Success Response",
@@ -18,17 +18,15 @@ export default async (fastify, options) => {
                 items: {
                   type: "object",
                   properties: {
-                    memberUid: { type: "string" },
-                    displayName: { type: "string" },
+                    username: { type: "string" },
+                    domain: { type: "string"},
                     createdAt: { type: "string" },
-                    email: { type: "string" },
-                    accountName: { type: "string" },
-                    accountId: { type: "string" },
-                    accountCreatedAt: { type: "string" },
-                    domain: { type: "string" }
-                  },
+                    status: { type: "string" }
+                  } 
+
                 },
-              },
+               
+              }
             },
           },
         },
@@ -38,19 +36,12 @@ export default async (fastify, options) => {
       
       const userId = request.session.getUserId();
 
-      console.log("USERID", userId);
-
-      const realm = request.params.accountRealm;
-      console.log(realm);
-
       try {
-        const result = await fastify.memberService.getAccounts(
+        const result = await fastify.gtsFediverseService.getAccountsByCredentialUid(
           userId
         );
 
-        console.log(result)
-
-        return { accounts: result };
+        return result;
       } catch (e) {
         console.log(e);
         reply.code(500);
