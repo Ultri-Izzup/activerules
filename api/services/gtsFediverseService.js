@@ -87,9 +87,8 @@ const GtsFediverseService = (postgres) => {
         [credentialUid]
       );
 
-      console.log(result)
-
       return { accounts: result.rows };
+
     } catch (e) {
       console.log(e);
     } finally {
@@ -97,6 +96,68 @@ const GtsFediverseService = (postgres) => {
       client.release();
     }
   };
+
+  const checkAvailability = async (credentialUid, request) => {
+    const client = await postgres.connect();
+
+    try {
+      const result = await client.query(
+        `SELECT 
+          f.username,
+          f.status,
+          r.domain
+        FROM entity.fediverse f
+        INNER JOIN entity.realm r ON r.id = f.realm_id
+        WHERE 
+          r.domain IN ($3)
+        AND (
+          f.username = $2 
+        OR
+          f.member_id = (SELECT c.member_id from entity.credential c WHERE c.uid = $1)
+          )
+        `,
+        [credentialUid, request.body.username, request.body.domains]
+      );
+
+      console.log('PROCESSSSS', request.ip, request.body)
+
+      console.log('REEESULT', result);
+
+      const available = [];
+      const usernameClaimed = [];
+      const realmExhausted = [];
+    
+      // Each returned row is NOT available, the remainder are available.
+      for (const row of result.rows) {
+        console.log('ROW', row);
+        //Add to usernameClaimed or realmExhausted
+      }
+
+
+      for (const dom of request.body.domains) {
+        console.log('DOMMM', dom);
+        if(
+          !usernameClaimed.includes(dom)
+          &&
+          !realmExhausted.includes(dom)
+          )
+          {
+            available.push(dom)
+          }
+      }
+
+      return { 
+        available: available,
+        usernameClaimed: usernameClaimed,
+        realmExhausted: realmExhausted
+       };
+    } catch (e) {
+      console.log(e);
+    } finally {
+      // Release the client immediately after query resolves, or upon error
+      client.release();
+    }
+  }
 
 //   /**
 //    * Create a Fediverse account.
@@ -271,6 +332,7 @@ const GtsFediverseService = (postgres) => {
 
   return {
     getAccountsByCredentialUid,
+    checkAvailability
     // provision,
     // password,
   };

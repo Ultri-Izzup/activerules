@@ -32,13 +32,13 @@ export default async (fastify, options) => {
 									type: "string",
 								},
 							},
-							realmLimit: {
+							usernameClaimed: {
 								type: "array",
 								items: {
 									type: "string",
 								},
 							},
-							taken: {
+							realmExhausted: {
 								type: "array",
 								items: {
 									type: "string",
@@ -54,8 +54,8 @@ export default async (fastify, options) => {
 
 			try {
 				const result =
-					await fastify.memberService.getMemberByCredentialUid(userId);
-				
+					await fastify.gtsFediverseService.checkAvailability(userId, request);
+				console.log('REAALALLAL', result)
 				return result;
 			} catch (e) {
 				console.log(e);
