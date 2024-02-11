@@ -105,23 +105,21 @@ const GtsFediverseService = (postgres) => {
         `SELECT 
           f.username,
           f.status,
-          r.domain
+          r.domain,
+          f.member_id = c.member_id AS memberOwned
         FROM entity.fediverse f
         INNER JOIN entity.realm r ON r.id = f.realm_id
+        INNER JOIN entity.credential c ON c.uid = $1
         WHERE 
-          r.domain IN ($3)
+          r.domain = ANY ($3)
         AND (
           f.username = $2 
-        OR
-          f.member_id = (SELECT c.member_id from entity.credential c WHERE c.uid = $1)
+          OR
+          f.member_id = c.member_id
           )
         `,
         [credentialUid, request.body.username, request.body.domains]
       );
-
-      console.log('PROCESSSSS', request.ip, request.body)
-
-      console.log('REEESULT', result);
 
       const available = [];
       const usernameClaimed = [];
@@ -129,13 +127,14 @@ const GtsFediverseService = (postgres) => {
     
       // Each returned row is NOT available, the remainder are available.
       for (const row of result.rows) {
-        console.log('ROW', row);
-        //Add to usernameClaimed or realmExhausted
+        if(row.memberOwned) {
+          realmExhausted.push(row.domain)
+        } else {
+          usernameClaimed.push(row.domain)
+        }
       }
 
-
       for (const dom of request.body.domains) {
-        console.log('DOMMM', dom);
         if(
           !usernameClaimed.includes(dom)
           &&
@@ -151,8 +150,48 @@ const GtsFediverseService = (postgres) => {
         usernameClaimed: usernameClaimed,
         realmExhausted: realmExhausted
        };
+
     } catch (e) {
       console.log(e);
+    } finally {
+      // Release the client immediately after query resolves, or upon error
+      client.release();
+    }
+  }
+
+  const claimUsername = async (credentialUid, request) => {
+    const client = await postgres.connect();
+
+    try {
+      const result = await client.query(
+        `
+        INSERT INTO entity.fediverse(username, realm_id, status, member_id)
+        SELECT 
+          $2 AS username, 
+          r.id AS realm_id,
+          'reserved' AS status, 
+          (SELECT * FROM entity.member_id_by_credential_uid($1) AS member_id
+          )
+        FROM entity.realm r
+        WHERE r.domain = ANY ($3)
+        `,
+        [credentialUid, request.body.username, request.body.domains]
+      );
+
+      console.log('REEEESULT', result)
+
+      return { 
+        claimed: {
+          username: request.body.username,
+          domains: request.body.domains
+        }
+      };
+
+    } catch (e) {
+      console.log('CLAIM ERROR', e);
+      return {
+        error: 'username not available'
+      }
     } finally {
       // Release the client immediately after query resolves, or upon error
       client.release();
@@ -332,7 +371,8 @@ const GtsFediverseService = (postgres) => {
 
   return {
     getAccountsByCredentialUid,
-    checkAvailability
+    checkAvailability,
+    claimUsername
     // provision,
     // password,
   };

@@ -26,30 +26,25 @@ export default async (fastify, options) => {
 						description: "Success Response",
 						type: "object",
 						properties: {
-							success: {
-								type: "array",
-								items: {
-									type: "string",
-								},
-							},
-                            failed: {
-								type: "array",
-								items: {
-									type: "string",
-								},
-							},
-							realmLimit: {
-								type: "array",
-								items: {
-									type: "string",
-								},
-							},
-							taken: {
-								type: "array",
-								items: {
-									type: "string",
-								},
-							},
+							claimed: {
+								type: "object",
+								properties: {
+									username: { type: "string"},
+									domains: {
+										type: "array",
+										items: {
+											type: "string"
+										}
+									}
+								}
+							}
+						},
+					},
+					409: {
+						description: "username unavailable",
+						type: "object",
+						properties: {
+							message: { type: "string"}
 						},
 					},
 				},
@@ -60,9 +55,16 @@ export default async (fastify, options) => {
 
 			try {
 				const result =
-					await fastify.memberService.getMemberByCredentialUid(userId);
+				await fastify.gtsFediverseService.claimUsername(userId, request);
 
+				if(result.error) {
+					reply.code(409);
+					return { message: "Username not available, try another" };
+				}
+					
 				return result;
+				
+				
 			} catch (e) {
 				console.log(e);
 				reply.code(500);

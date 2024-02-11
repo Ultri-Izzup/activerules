@@ -55,7 +55,7 @@ export default async (fastify, options) => {
 			try {
 				const result =
 					await fastify.gtsFediverseService.checkAvailability(userId, request);
-				console.log('REAALALLAL', result)
+
 				return result;
 			} catch (e) {
 				console.log(e);
