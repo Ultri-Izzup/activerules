@@ -26,24 +26,30 @@ export default async (fastify, options) => {
 						description: "Success Response",
 						type: "object",
 						properties: {
-							available: {
-								type: "array",
-								items: {
-									type: "string",
-								},
-							},
-							usernameClaimed: {
-								type: "array",
-								items: {
-									type: "string",
-								},
-							},
-							realmExhausted: {
-								type: "array",
-								items: {
-									type: "string",
-								},
-							},
+							username: { type: "string" },
+							domains: {
+								type: "object",
+								properties: {
+									available: {
+										type: "array",
+										items: {
+											type: "string",
+										},
+									},
+									usernameClaimed: {
+										type: "array",
+										items: {
+											type: "string",
+										},
+									},
+									realmExhausted: {
+										type: "array",
+										items: {
+											type: "string",
+										},
+									},
+								}
+							}
 						},
 					},
 				},

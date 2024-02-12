@@ -12,21 +12,21 @@ export default async (fastify, options) => {
 				body: {
 					type: "object",
 					properties: {
-						username: { type: "string" },
 						domain: { type: "string" },
                         password: { type: "string" }
 						},
-				
 				},
 				response: {
 					200: {
 						description: "Success Response",
 						type: "object",
 						properties: {
-							success: {
-								type: "array",
-								items: {
-									type: "string",
+							account: {
+								type: "object",
+								properties: {
+									username:{ type: "string" },
+									domain:{ type: "string" },
+									status:{ type: "string" },
 								},
 							}
 						},
@@ -39,7 +39,7 @@ export default async (fastify, options) => {
 
 			try {
 				const result =
-					await fastify.memberService.getMemberByCredentialUid(userId);
+					await fastify.gtsFediverseService.provisionUsername(userId, request);
 
 				return result;
 			} catch (e) {

@@ -26,17 +26,17 @@ export default async (fastify, options) => {
 						description: "Success Response",
 						type: "object",
 						properties: {
-							claimed: {
+							username: { type: "string"},
+							domains: {
 								type: "object",
 								properties: {
-									username: { type: "string"},
-									domains: {
+									claimed: {
 										type: "array",
 										items: {
 											type: "string"
 										}
 									}
-								}
+								}									
 							}
 						},
 					},
