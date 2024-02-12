@@ -20,15 +20,13 @@ export default async (fastify, options) => {
 					200: {
 						description: "Success Response",
 						type: "object",
+			
 						properties: {
-							account: {
-								type: "object",
-								properties: {
-									username:{ type: "string" },
-									domain:{ type: "string" },
-									status:{ type: "string" },
-								},
-							}
+							username:{ type: "string" },
+							domain:{ type: "string" },
+							status:{ type: "string" },
+							updatedAt:{ type: "string" },
+					
 						},
 					},
 				},

@@ -148,7 +148,7 @@ const GtsFediverseService = (postgres) => {
 					available: available,
 					usernameClaimed: usernameClaimed,
 					realmExhausted: realmExhausted,
-				}
+				},
 			};
 		} catch (e) {
 			console.log(e);
@@ -182,8 +182,8 @@ const GtsFediverseService = (postgres) => {
 			return {
 				username: username,
 				domains: {
-					claimed: request.body.domains
-				}
+					claimed: request.body.domains,
+				},
 			};
 		} catch (e) {
 			console.log("CLAIM ERROR", e);
@@ -196,40 +196,139 @@ const GtsFediverseService = (postgres) => {
 		}
 	};
 
+	const _setFediverseProcessing = async (credentialUid, fediDomain) => {
+		const client = await postgres.connect();
+
+		try {
+
+			const result = await client.query(
+				`
+				UPDATE entity.fediverse AS f
+				SET status = 'processing'
+				FROM entity.member m 
+				WHERE m.id = f.member_id
+				AND f.realm_id = (SELECT r.id FROM entity.realm r WHERE r.domain = $2)
+				AND f.member_id = entity.member_id_by_credential_uid($1)
+				RETURNING f.id AS "fediverseId", f.username, f.status, f.updated_at AS "updatedAt", m.email
+				`,
+				[credentialUid, fediDomain],
+			);
+
+			console.log('START RESULT', result)
+
+			return result.rows[0];
+
+		} catch (e) {
+			console.log("ERROR IN PROCESSING", e);
+			return {
+				error: "unable to update fediverse record",
+			};
+		} finally {
+			// Release the client immediately after query resolves, or upon error
+			client.release();
+		}
+	};
+
+	const _setFediverseProvisioned = async (fediverseId) => {
+		const client = await postgres.connect();
+
+		try {
+
+			const result = await client.query(
+				`
+				UPDATE entity.fediverse 
+				SET status = 'active'
+				WHERE id = $1
+				RETURNING status, updated_at AS "updatedAt"
+				`,
+				[fediverseId],
+			);
+
+			console.log('END RESULT', result)
+
+			return result;
+
+		} catch (e) {
+			console.log("ERROR SETTING PROVISIONED", e);
+			return {
+				error: "unable to set fediverse status provisioned",
+			};
+		} finally {
+			// Release the client immediately after query resolves, or upon error
+			client.release();
+		}
+	};
+
 	const provisionUsername = async (credentialUid, request) => {
+		if (credentialUid && request.body.domain && request.body.password) {
 
-    if (credentialUid && request.domain && request.password) {
-		// @todo Test password strength before sending to GTS
+			// Update Fediverse account status to 'processing'
+			// Return the Fediverse account id, and the member ID and email
+			const fediData = await _setFediverseProcessing(credentialUid, request.body.domain);
 
-		// Update Fediverse account status to 'processing'
-		// Return the Fediverse account id for efficient activation.
+			console.log('FEDIDATA', fediData);
+			// Call GTS Binary w/ domain specific config
+			// Update the account to 'active'
+			// // Call the GTS shell script
+			// const serviceResult = await createService(
+			// 	newService.email,
+			// 	newService.username,
+			// 	domain,
+			// 	password,
+			// );
+			// console.log("SHELL RESULT\n", serviceResult);
+			const finalData = await _setFediverseProvisioned(fediData.fediverseId);
 
-		// Call GTS Binary w/ domain specific config
+			console.log('FEDIDATA', finalData);
 
-		// Update the account to 'active'
+			return {
+				username: fediData.username,
+				domain: request.body.domain,
+				status: finalData.status,
+				updatedAt: finalData.updatedAt,
+			}
+		}
+	};
 
-		// // Call the GTS shell script
-		// const serviceResult = await createService(
-		// 	newService.email,
-		// 	newService.username,
-		// 	domain,
-		// 	password,
-		// );
-		// console.log("SHELL RESULT\n", serviceResult);
+	const usernamePassword = async (credentialUid, request) => {
+		if (credentialUid && request.body.domain && request.body.password) {
 
-		// await _activateService(newService.accountId, "fediverse");
+			// Update Fediverse account status to 'processing'
+			// Return the Fediverse account id, and the member ID and email
+			const fediData = await _setFediverseProcessing(credentialUid, request.body.domain);
 
-		// return {
-		// 	status: "OK",
-		// 	service: {
-		// 		status: "active",
-		// 		createdAt: newService.createdAt,
-		// 	},
-		// };
-	} 
-		
-    throw new Error("Unable to create a Fediverse account.");
-		
+			console.log('FEDIDATA', fediData);
+			// Call GTS Binary w/ domain specific config
+			// Update the account to 'active'
+			// // Call the GTS shell script
+			// const serviceResult = await createService(
+			// 	newService.email,
+			// 	newService.username,
+			// 	domain,
+			// 	password,
+			// );
+			// console.log("SHELL RESULT\n", serviceResult);
+			const finalData = await _setFediverseProvisioned(fediData.fediverseId);
+
+			console.log('FEDIDATA', finalData);
+
+			return {
+				username: fediData.username,
+				domain: request.body.domain,
+				status: finalData.status,
+				updatedAt: finalData.updatedAt,
+			}
+
+
+
+			// return {
+			// 	status: "OK",
+			// 	service: {
+			// 		status: "active",
+			// 		createdAt: newService.createdAt,
+			// 	},
+			// };
+		}
 	};
 
 	//   /**
@@ -408,6 +507,7 @@ const GtsFediverseService = (postgres) => {
 		checkAvailability,
 		claimUsername,
 		provisionUsername,
+		usernamePassword
 		// provision,
 		// password,
 	};

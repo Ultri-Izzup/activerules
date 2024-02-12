@@ -6,29 +6,27 @@ export default async (fastify, options) => {
 		{
 			preHandler: verifySession(),
 			schema: {
-				description: "Set Fediverse account password",
+				description: "Update Fediverse password",
 				tags: ["fediverse"],
-				summary: "Set new password for a provisioned Fediverse account.",
+				summary: "Update the password for the claimed username in a domain.",
 				body: {
 					type: "object",
 					properties: {
-						username: { type: "string" },
 						domain: { type: "string" },
                         password: { type: "string" }
 						},
-				
 				},
 				response: {
 					200: {
 						description: "Success Response",
 						type: "object",
+			
 						properties: {
-							success: {
-								type: "array",
-								items: {
-									type: "string",
-								},
-							}
+							username:{ type: "string" },
+							domain:{ type: "string" },
+							status:{ type: "string" },
+							updatedAt:{ type: "string" },
+					
 						},
 					},
 				},
@@ -39,13 +37,13 @@ export default async (fastify, options) => {
 
 			try {
 				const result =
-					await fastify.memberService.getMemberByCredentialUid(userId);
+					await fastify.gtsFediverseService.usernamePassword(userId, request);
 
 				return result;
 			} catch (e) {
 				console.log(e);
 				reply.code(500);
-				return { message: "Unable to set GTS account password" };
+				return { message: "Unable to update password for GTS account" };
 			}
 		},
 	);

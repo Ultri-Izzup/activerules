@@ -483,7 +483,12 @@
 							"listen": "prerequest",
 							"script": {
 								"exec": [
-									""
+									"const randomUsername = pm.variables.replaceIn('{{$randomUserName}}');",
+									"console.log(randomUsername)",
+									"const cleanName = randomUsername.toLowerCase().replace(\".\", \"_\").replaceAll(\"[^a-zA-Z0-9_]\", \"\");",
+									"console.log(cleanName)",
+									"",
+									"pm.environment.set(\"randoUsername\", cleanName);"
 								],
 								"type": "text/javascript"
 							}
@@ -505,7 +510,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"username\": \"test\",\n    \"domains\": [\"usevue.org\",\"democratic.space\",\"sportsword.com\"]\n}",
+							"raw": "{\n    \"username\": \"{{randoUsername}}\",\n    \"domains\": [\"usevue.org\",\"democratic.space\",\"sportsword.com\"]\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -547,6 +552,75 @@
 							"listen": "prerequest",
 							"script": {
 								"exec": [
+									"const randomUsername = pm.variables.replaceIn('{{$randomUserName}}');",
+									"console.log(randomUsername)",
+									"const cleanName = randomUsername.toLowerCase().replace(\".\", \"_\").replaceAll(\"[^a-zA-Z0-9_]\", \"\");",
+									"console.log(cleanName)",
+									"",
+									"pm.environment.set(\"randoUsername\", cleanName);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "rid",
+								"value": "passwordless",
+								"type": "text"
+							},
+							{
+								"key": "st-auth-mode",
+								"value": "cookie",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"{{randoUsername}}\",\n    \"domains\": [\"democratic.space\"]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{apiUrl}}/fediverse/username/claim",
+							"host": [
+								"{{apiUrl}}"
+							],
+							"path": [
+								"fediverse",
+								"username",
+								"claim"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Activate Fediverse account",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"HTTP Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"var jsonData = pm.response.json();",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
 									""
 								],
 								"type": "text/javascript"
@@ -569,7 +643,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"username\": \"test\",\n    \"domains\": [\"usevue.org\",\"democratic.space\"]\n}",
+							"raw": "{\n    \"username\": \"test\",\n    \"domain\": \"democratic.space\",\n    \"password\": \"reRTer#$%gerg56erergergerge\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -577,14 +651,14 @@
 							}
 						},
 						"url": {
-							"raw": "{{apiUrl}}/fediverse/username/claim",
+							"raw": "{{apiUrl}}/fediverse/username/provision",
 							"host": [
 								"{{apiUrl}}"
 							],
 							"path": [
 								"fediverse",
 								"username",
-								"claim"
+								"provision"
 							]
 						}
 					},
@@ -633,7 +707,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"username\": \"test\",\n    \"domain\": \"usevue.org\",\n    \"password\": \"reRTer#$%gerg56erergergerge\"\n}",
+							"raw": "{\n    \"domain\": \"usevue.org\",\n    \"password\": \"reRTer#$%gerg56erergergerge\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
