@@ -108,7 +108,7 @@ const GtsFediverseService = (postgres) => {
           f.username,
           f.status,
           r.domain,
-          f.member_id = c.member_id AS memberOwned
+          f.member_id = c.member_id AS "memberOwned"
         FROM entity.fediverse f
         INNER JOIN entity.realm r ON r.id = f.realm_id
         INNER JOIN entity.credential c ON c.uid = $1
