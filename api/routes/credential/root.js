@@ -13,8 +13,16 @@ export default async (fastify, options) => {
             description: "Success Response",
             type: "object",
             properties: {
-              displayName: { type: "string" },
-              realm: { type: "string"}
+              accounts: {
+                type: "array",
+                items: {
+                  type: "object",
+                  properties: {
+                    displayName: { type: "string" },
+                    realm: { type: "string"}
+                  }
+                }
+              }
             },
           },
         },
@@ -29,7 +37,9 @@ export default async (fastify, options) => {
           userId
         );
 
-        return result;
+        return {
+          accounts: result
+        };
       } catch (e) {
         console.log(e);
         reply.code(500);

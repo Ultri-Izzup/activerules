@@ -30,7 +30,7 @@ export default async (fastify, options) => {
 							domains: {
 								type: "object",
 								properties: {
-									claimed: {
+									successfulClaims: {
 										type: "array",
 										items: {
 											type: "string"

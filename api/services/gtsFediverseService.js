@@ -179,10 +179,12 @@ const GtsFediverseService = (postgres) => {
 				[credentialUid, username, request.body.domains],
 			);
 
+			console.log(result)
+
 			return {
 				username: username,
 				domains: {
-					claimed: request.body.domains,
+					successfulClaims: request.body.domains,
 				},
 			};
 		} catch (e) {

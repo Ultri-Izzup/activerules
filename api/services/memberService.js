@@ -20,7 +20,7 @@ const MemberService = (postgres) => {
         [credentialUid]
       );
     
-      return rows[0];
+      return rows;
 
     } catch(e) {
       console.log(e) 
